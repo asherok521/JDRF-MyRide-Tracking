@@ -13,12 +13,31 @@ function getStravaActivityData() {
   // get the sheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('Sheet1');
+
+  // This represents ALL the data
+var range = sheet.getDataRange();
+var values = range.getValues();
+var currentData = [];
+
+// This logs the spreadsheet in CSV format with a trailing comma and adds it to an array of current data in the Sheet
+for (var i = 1; i < values.length; i++) {
+  var row = "";
+  for (var j = 1; j < values[i].length; j++) {
+    if (values[i][j]) {
+      row = row + values[i][j];
+    }
+    row = row + ",";
+  }
+  currentData.push(row);
+  Logger.log(currentData);
+}
  
   // call the Strava API to retrieve data
   var data = callStravaAPI();
    
-  // empty array to hold activity data
+  // empty arrays to hold all activity data and new activity data
   var stravaData = [];
+  var newStravaData = [];
      
   // loop over activity data and add to stravaData array for Sheet
   data.forEach(function(activity) {

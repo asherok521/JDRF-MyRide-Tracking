@@ -21,14 +21,14 @@ var currentData = [];
 
 // This logs the spreadsheet in CSV format with a trailing comma and adds it to an array of current data in the Sheet
 for (var i = 1; i < values.length; i++) {
-  var row = "";
-  for (var j = 1; j < values[i].length; j++) {
+  //var row = [];
+  /*for (var j = 1; j < values[i].length; j++) {
     if (values[i][j]) {
       row = row + values[i][j];
     }
     row = row + ",";
-  }
-  currentData.push(row);
+  }*/
+  currentData.push(values[i][0]);
   Logger.log(currentData);
 }
  
@@ -37,7 +37,6 @@ for (var i = 1; i < values.length; i++) {
    
   // empty arrays to hold all activity data and new activity data
   var stravaData = [];
-  var newStravaData = [];
      
   // loop over activity data and add to stravaData array for Sheet
   data.forEach(function(activity) {
@@ -50,10 +49,20 @@ for (var i = 1; i < values.length; i++) {
       activity.total_elevation_gain
     );
     stravaData.push(arr);
+    Logger.log(stravaData);
   });
-   
+   //Try to compare and only pull out unique values
+    var newStravaData = [];
+    stravaData.forEach( function(each){
+      if (!currentData.includes(each[0])) { newStravaData.push(each);
+    }});
+    /*currentData.forEach(function(each){
+      if (!stravaData.includes(each[0])) { newStravaData.push(each);}
+    });*/
+    Logger.log(newStravaData);
+
   // paste the values into the Sheet
-  sheet.getRange(sheet.getLastRow() + 1, 1, stravaData.length, stravaData[0].length).setValues(stravaData);
+  sheet.getRange(sheet.getLastRow() + 1, 1, newStravaData.length, newStravaData[0].length).setValues(newStravaData);
 }
  
 // call the Strava API
